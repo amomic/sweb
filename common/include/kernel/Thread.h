@@ -15,6 +15,7 @@ class Loader;
 class Terminal;
 class Mutex;
 class Lock;
+class UserProcess;
 
 extern Thread* currentThread;
 
