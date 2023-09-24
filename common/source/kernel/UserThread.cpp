@@ -12,8 +12,8 @@
 UserThread::UserThread(ustl::string filename, FileSystemInfo *fs_info, uint32 terminal_number, UserProcess *userProcess,
             void *(*start_routine)(void *), void *wrapper, size_t tid, void *argc, size_t args) :
             Thread(fs_info, filename, Thread::USER_THREAD),
-            terminal_number_(terminal_number),
             process_(userProcess),
+            terminal_number_(terminal_number),
             tid_(tid)
 {
     loader_ = process_->loader_;
@@ -25,6 +25,7 @@ UserThread::UserThread(ustl::string filename, FileSystemInfo *fs_info, uint32 te
                                      getKernelStackStartPointer());
 
     ArchThreads::setAddressSpace(this, loader_->arch_memory_);
+
 
     if(!start_routine)
     {
@@ -60,4 +61,8 @@ void UserThread::Run()
     assert(false);
 }
 
+UserProcess* UserThread::getProcess()
+{
+    return process_;
+}
 

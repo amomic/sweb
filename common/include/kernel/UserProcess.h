@@ -2,6 +2,7 @@
 
 #include "Thread.h"
 #include "UserThread.h"
+#include "umap.h"
 
 class UserThread;
 class UserProcess
@@ -24,6 +25,8 @@ class UserProcess
 
     size_t threads_counter_for_id_ = 0;
     UserProcess* process_;
+    ustl::map<size_t, Thread *> threads_map_;
+
 
   private:
     int32 fd_;

@@ -31,6 +31,7 @@ UserProcess::UserProcess(ustl::string filename, FileSystemInfo *fs_info, uint32 
   Thread *user_thread = new UserThread(filename,fs_info,terminal_number, this, NULL, loader_->getEntryFunction(), 0, 0, NULL);
   pid_ = ProcessRegistry::instance()->processCount();
   Scheduler::instance()->addNewThread(user_thread);
+  threads_map_.push_back(ustl::make_pair(0,user_thread));
 
 }
 
@@ -61,7 +62,8 @@ UserThread* UserProcess::createThread(size_t* thread, size_t *attr, void*(*start
     threads_counter_for_id_++;
     *thread = threads_counter_for_id_;
     *attr = NULL;
-    Thread *new_thread = new UserThread(filename_, fs_info_, terminal_number_, this, start_routine, wrapper,
+    process_ = this;
+    Thread *new_thread = new UserThread(filename_, fs_info_, terminal_number_, process_, start_routine, wrapper,
                                         threads_counter_for_id_, (void*)argc, args);
     if(new_thread)
     {
@@ -73,6 +75,8 @@ UserThread* UserProcess::createThread(size_t* thread, size_t *attr, void*(*start
     }
 
     Scheduler::instance()->addNewThread(new_thread);
+    threads_map_.push_back(ustl::make_pair(threads_counter_for_id_,new_thread));
+
     return (UserThread*)new_thread;
 
 }
